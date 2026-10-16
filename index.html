@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Два смока на Mirage за Т: окно и коннектор</title>
+
+<!-- ШРИФТЫ (Google Fonts):
+     Russo One (заголовки): плотный, угловатый, похожий на военную маркировку и игровые интерфейсы,
+       поэтому сразу задаёт тему шутера; есть кириллица.
+     Golos Text (основной текст): спокойный гротеск, сделан для чтения с экрана и хорошо
+       работает с русским текстом, поэтому длинные абзацы читаются легко. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&amp;family=Golos+Text:wght@400;600&amp;display=swap" rel="stylesheet">
+
+<style>
+/* ПАЛИТРА (собрана на coolors.co: https://coolors.co/10252e-173540-ecd9a8-f2b632-2fb5a8):
+   тёмно-бирюзовый и песочный взяты у ночного Mirage и пыльной дымки, а золотой акцент
+   выделяет кнопки и заголовки, как маркер траектории броска. */
+:root{
+  --c-night:#10252e;   /* фон тёмной темы */
+  --c-panel:#173540;   /* карточки */
+  --c-sand:#ecd9a8;    /* основной текст */
+  --c-gold:#f2b632;    /* акцент */
+  --c-teal:#2fb5a8;    /* вторичный акцент */
+
+  --bg:var(--c-night);
+  --panel:var(--c-panel);
+  --line:#2a5361;
+  --text:var(--c-sand);
+  --muted:#9db4b8;
+  --heading:var(--c-gold);
+  --btn:var(--c-gold);
+  --btn-ink:#2b1e00;
+  --btn2:var(--c-teal);
+  --btn2-ink:#08201f;
+  --focus:var(--c-gold);
+}
+:root[data-theme="light"]{
+  --bg:#f6efdc;
+  --panel:#fffaf0;
+  --line:#d8c9a0;
+  --text:#10252e;
+  --muted:#4b6168;
+  --heading:#7a4f00;
+  --btn:#f2b632;
+  --btn-ink:#2b1e00;
+  --btn2:#17766c;
+  --btn2-ink:#ffffff;
+  --focus:#7a4f00;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 "Golos Text",system-ui,sans-serif;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+h1,h2{font-family:"Russo One",Impact,sans-serif;font-weight:400;color:var(--heading);line-height:1.1;margin:0 0 14px}
+h1{font-size:clamp(32px,7vw,58px)}
+h2{font-size:clamp(24px,4.5vw,34px)}
+p{margin:0 0 14px;max-width:62ch}
+a,button{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0}
+.brand{font:400 20px "Russo One",Impact,sans-serif;color:var(--heading)}
+.btn{padding:10px 16px;border-radius:8px;border:2px solid var(--btn);background:var(--btn);color:var(--btn-ink);font:600 15px "Golos Text",sans-serif;cursor:pointer}
+.btn.alt{background:var(--btn2);border-color:var(--btn2);color:var(--btn2-ink)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+
+.hero{padding:16px 0 36px}
+.hero p.lead{font-size:19px;color:var(--muted)}
+.photo{margin:0}
+.photo img{display:block;width:100%;height:auto;object-fit:cover;border-radius:12px;border:2px solid var(--line);background:var(--panel)}
+.photo.wide img{aspect-ratio:16/7}
+.photo.sq img{aspect-ratio:4/3}
+.photo figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
+
+section{padding:30px 0;border-top:2px solid var(--line)}
+.split{display:grid;gap:26px;grid-template-columns:minmax(0,320px) 1fr;align-items:start}
+@media (max-width:700px){.split{grid-template-columns:1fr}}
+.clip video{width:100%;aspect-ratio:9/16;max-height:72vh;object-fit:contain;display:block;background:#0a1a20;border-radius:10px;border:2px solid var(--line)}
+.clip .btn{margin-top:10px;width:100%}
+.note{display:block;margin-top:6px;border-left:4px solid var(--btn);padding:8px 12px;min-height:3.4em;background:var(--panel);border-radius:0 8px 8px 0;outline-offset:2px}
+.note:empty::before{content:attr(data-ph);color:var(--muted)}
+label.nl{display:block;margin-top:16px;font-weight:600}
+ul.err{padding-left:20px;max-width:62ch}
+ul.err li{margin-bottom:8px}
+.gal{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:18px}
+footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);font-size:14px}
+
+#up{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));
+  width:48px;height:48px;border-radius:50%;border:2px solid var(--btn);background:var(--btn);color:var(--btn-ink);
+  font:600 22px/1 "Golos Text",sans-serif;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s}
+#up.show{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span class="brand">Mirage за Т</span>
+    <!-- ИНТЕРАКТИВ 1: переключатель темы (запоминает выбор в браузере) -->
+    <button class="btn ghost" id="theme" type="button" aria-pressed="true">Тёмная тема</button>
+  </header>
+
+  <main>
+    <div class="hero">
+      <!-- ЗАГОЛОВОК 1: назван результат («два смока») и объекты («окно, коннектор»),
+           чтобы тема была понятна с первой секунды. -->
+      <h1>Два смока на Mirage за Т: окно и коннектор</h1>
+      <p class="lead">Короткий разбор двух бросков, которые закрывают самые опасные линии обзора на миде: что они делают, когда их кидать и где чаще всего ошибаются.</p>
+      <figure class="photo wide">
+        <img src="https://images.unsplash.com/photo-1723792306904-c417c0da40e3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" width="1400" height="934" alt="Игровое рабочее место с розово-фиолетовой подсветкой: изогнутый монитор с наушниками, системный блок со стеклянной стенкой и игровое кресло" fetchpriority="high">
+        <figcaption>Удобное место и порядок на столе помогают тренировать броски без спешки.</figcaption>
+      </figure>
+    </div>
+
+    <section id="why">
+      <!-- ЗАГОЛОВОК 2: вопрос «зачем», потому что читатель сначала хочет понять пользу. -->
+      <h2>Зачем выучить именно эти два смока</h2>
+      <p>Мид на Mirage решает многие раунды. Пока защитник сидит в окне со снайперкой, а другие стреляют по миду через коннектор, выйти вперёд почти невозможно.</p>
+      <p>Два смока убирают эти две линии. Команда получает несколько спокойных секунд, чтобы занять мид и сыграть дальше без лишних потерь.</p>
+    </section>
+
+    <section id="window">
+      <div class="split">
+        <div class="clip">
+          <video id="v1" src="https://www.youtube.com/shorts/YEmLbvr-_U4?feature=share" controls="" playsinline="" preload="metadata" aria-label="Видео: бросок смока на окно на Mirage"></video>
+          <button class="btn alt" type="button" data-v="v1">Смотреть заново</button>
+        </div>
+        <div>
+          <!-- ЗАГОЛОВОК 3: название совпадает с вкладкой/клипом, чтобы клип и текст читались вместе. -->
+          <h2>Смок на окно</h2>
+          <p>Окно даёт защитнику обзор почти на весь мид. Дым в нём закрывает снайперу картинку и не даёт получить выстрел в первые секунды выхода.</p>
+          <p>Бросок показан в клипе. Повторяй его на тренировочной карте, пока он не будет получаться с первой попытки.</p>
+          <label class="nl" for="n-window">Мои заметки по броску</label>
+          <div class="note" id="n-window" contenteditable="true" role="textbox" aria-multiline="true" data-f="window" data-ph="Где встать, куда целиться, как бросать"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="connector">
+      <div class="split">
+        <div class="clip">
+          <video id="v2" src="https://www.youtube.com/shorts/fC0I6F80izs" controls="" playsinline="" preload="metadata" aria-label=""></video>
+          <button class="btn alt" type="button" data-v="v2">Смотреть заново</button>
+        </div>
+        <div>
+          <!-- ЗАГОЛОВОК 4: то же правило, что у предыдущего: имя броска = имя клипа. -->
+          <h2>Смок на коннектор</h2>
+          <p>Коннектор связывает мид с позициями защиты у точки A. Через него защитники подтягиваются в мид и стреляют по вашей команде сбоку.</p>
+          <p>Если смок лёг точно, проход закрыт: ротация слышна, но не видна, и команда спокойно играет мид.</p>
+          <label class="nl" for="n-connector">Мои заметки по броску</label>
+          <div class="note" id="n-connector" contenteditable="true" role="textbox" aria-multiline="true" data-f="connector" data-ph="Где встать, куда целиться, как бросать"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="when">
+      <!-- ЗАГОЛОВОК 5: «когда» отвечает на главный практический вопрос после «что» и «как». -->
+      <h2>Когда бросать</h2>
+      <p>Смоки кидают в начале раунда, ещё до выхода в мид: если опоздать, защитники уже займут позиции и дым закроет только то, что они и так видели.</p>
+      <p>Договорись заранее, кто бросает окно, а кто коннектор, и скажи об этом в голосовом чате перед броском.</p>
+    </section>
+
+    <section id="errors">
+      <!-- ЗАГОЛОВОК 6: прямое название проблемы, чтобы читатель сразу нашёл свою ошибку. -->
+      <h2>Три частые ошибки</h2>
+      <ul class="err">
+        <li><b>Другая точка броска.</b> Сдвиг даже на полшага меняет место, куда падает граната.</li>
+        <li><b>Слишком ранний смок.</b> Дым рассеивается раньше, чем команда выходит вперёд.</li>
+        <li><b>Нет договорённости.</b> Двое бросают один смок, а второй проход остаётся открытым.</li>
+      </ul>
+    </section>
+
+    <section id="train">
+      <!-- ЗАГОЛОВОК 7: глагол «тренируйся» в повелительном наклонении, потому что блок — это инструкция. -->
+      <h2>Как тренироваться</h2>
+      <p>Включи тренировочный режим или карту с ботами и повторяй каждый бросок подряд по десять раз. Считай только те, что легли точно. Когда получается восемь из десяти, переходи к игре с командой.</p>
+      <div class="gal">
+        <figure class="photo sq">
+          <img src="https://images.unsplash.com/photo-1645802106095-765b7e86f5bb?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" width="900" height="1200" loading="lazy" alt="Крупный план игровой клавиатуры с розово-голубой подсветкой клавиш">
+          <figcaption>Любой бросок начинается с рук на клавиатуре: сначала повторение, потом игра.</figcaption>
+        </figure>
+        <figure class="photo sq">
+          <img src="https://images.unsplash.com/photo-1725629021424-ba7b8ce8848b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" width="1000" height="667" loading="lazy" alt="Тёмная комната с фиолетовой подсветкой: стол с монитором, игровой мышью и клавиатурой, на стене два светящихся постера">
+          <figcaption>Подсветка и свой уголок для игры помогают сосредоточиться на тренировке.</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer>Фотографии: Unsplash. Видео с бросками: каналы Carletti и fraz0tv на YouTube.</footer>
+</div>
+
+<!-- ИНТЕРАКТИВ 2: кнопка «Наверх» (появляется после прокрутки) -->
+<button id="up" type="button" aria-label="Наверх">↑</button>
+
+<script>
+(function(){
+  var root=document.documentElement;
+
+  /* Тема */
+  var tbtn=document.getElementById("theme");
+  function applyTheme(t){
+    root.setAttribute("data-theme",t);
+    tbtn.setAttribute("aria-pressed",t==="light");
+    tbtn.textContent=t==="light"?"Тёмная тема":"Светлая тема";
+  }
+  var saved="";
+  try{saved=localStorage.getItem("mir3:theme")||""}catch(e){}
+  if(!saved&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)saved="light";
+  applyTheme(saved==="light"?"light":"dark");
+  tbtn.addEventListener("click",function(){
+    var next=root.getAttribute("data-theme")==="light"?"dark":"light";
+    applyTheme(next);
+    try{localStorage.setItem("mir3:theme",next)}catch(e){}
+  });
+
+  /* Наверх */
+  var up=document.getElementById("up");
+  function onScroll(){up.classList.toggle("show",window.scrollY>400)}
+  window.addEventListener("scroll",onScroll,{passive:true});onScroll();
+  up.addEventListener("click",function(){window.scrollTo({top:0})});
+
+  /* Видео: одновременно играет только одно; кнопка «Смотреть заново» */
+  var vs=document.querySelectorAll("video");
+  vs.forEach(function(v){v.addEventListener("play",function(){vs.forEach(function(o){if(o!==v)o.pause()})})});
+  document.querySelectorAll("[data-v]").forEach(function(b){
+    b.addEventListener("click",function(){var v=document.getElementById(b.dataset.v);v.currentTime=0;v.play().catch(function(){})});
+  });
+
+  /* Заметки сохраняются в браузере */
+  document.querySelectorAll("[data-f]").forEach(function(el){
+    var k="mir3:"+el.dataset.f;
+    try{el.textContent=localStorage.getItem(k)||""}catch(e){}
+    el.addEventListener("input",function(){try{localStorage.setItem(k,el.textContent)}catch(e){}});
+  });
+})();
+</script>
+
+
+</body></html>
