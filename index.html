@@ -3,6 +3,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Два смока на Mirage за Т: окно и коннектор</title>
+<meta name="description" content="Разбор двух смоков на Mirage за Т: Window и Connector. Когда бросать и где чаще всего ошибаются.">
+
+<script>
+/* Тема выбирается до отрисовки страницы, чтобы не было вспышки не той темы */
+(function(){
+  var t="";
+  try{t=localStorage.getItem("mir3:theme")||""}catch(e){}
+  if(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)t="light";
+  document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark");
+})();
+</script>
 
 <!-- ШРИФТЫ (Google Fonts):
      Russo One (заголовки): плотный, угловатый, похожий на военную маркировку и игровые интерфейсы,
@@ -32,8 +43,6 @@
   --heading:var(--c-gold);
   --btn:var(--c-gold);
   --btn-ink:#2b1e00;
-  --btn2:var(--c-teal);
-  --btn2-ink:#08201f;
   --focus:var(--c-gold);
 }
 :root[data-theme="light"]{
@@ -45,12 +54,11 @@
   --heading:#7a4f00;
   --btn:#f2b632;
   --btn-ink:#2b1e00;
-  --btn2:#17766c;
-  --btn2-ink:#ffffff;
   --focus:#7a4f00;
 }
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 "Golos Text",system-ui,sans-serif;
@@ -58,36 +66,56 @@ body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 "Golos Te
 h1,h2{font-family:"Russo One",Impact,sans-serif;font-weight:400;color:var(--heading);line-height:1.1;margin:0 0 14px}
 h1{font-size:clamp(32px,7vw,58px)}
 h2{font-size:clamp(24px,4.5vw,34px)}
+h2 small{font:400 .55em "Golos Text",sans-serif;color:var(--muted);margin-left:6px}
 p{margin:0 0 14px;max-width:62ch}
-a,button{color:inherit}
+a{color:var(--heading)}
 :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 
-.wrap{max-width:1000px;margin:0 auto;padding:0 18px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0}
+/* Ширину страницы задают сами шапка, основной блок и подвал, обёртка не нужна */
+body>header,body>main,body>footer{max-width:1000px;margin:0 auto;padding-left:18px;padding-right:18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;padding-bottom:16px}
 .brand{font:400 20px "Russo One",Impact,sans-serif;color:var(--heading)}
 .btn{padding:10px 16px;border-radius:8px;border:2px solid var(--btn);background:var(--btn);color:var(--btn-ink);font:600 15px "Golos Text",sans-serif;cursor:pointer}
-.btn.alt{background:var(--btn2);border-color:var(--btn2);color:var(--btn2-ink)}
 .btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn[disabled]{opacity:.6;cursor:progress}
 
-.hero{padding:16px 0 36px}
+.hero{padding:16px 0 36px;border-top:0}
 .hero p.lead{font-size:19px;color:var(--muted)}
 .photo{margin:0}
 .photo img{display:block;width:100%;height:auto;object-fit:cover;border-radius:12px;border:2px solid var(--line);background:var(--panel)}
 .photo.wide img{aspect-ratio:16/7}
-.photo.sq img{aspect-ratio:4/3}
 .photo figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
 
 section{padding:30px 0;border-top:2px solid var(--line)}
-.split{display:grid;gap:26px;grid-template-columns:minmax(0,320px) 1fr;align-items:start}
-@media (max-width:700px){.split{grid-template-columns:1fr}}
-.clip video{width:100%;aspect-ratio:9/16;max-height:72vh;object-fit:contain;display:block;background:#0a1a20;border-radius:10px;border:2px solid var(--line)}
-.clip .btn{margin-top:10px;width:100%}
-.note{display:block;margin-top:6px;border-left:4px solid var(--btn);padding:8px 12px;min-height:3.4em;background:var(--panel);border-radius:0 8px 8px 0;outline-offset:2px}
-.note:empty::before{content:attr(data-ph);color:var(--muted)}
+
+/* Раздел с роликом: на широком экране видео слева, заголовок и текст справа;
+   на узком порядок такой: заголовок, видео, текст */
+.split{display:grid;gap:0 26px;align-items:start;
+  grid-template-columns:minmax(0,320px) 1fr;grid-template-rows:auto 1fr;
+  grid-template-areas:"clip title" "clip body"}
+.split>h2{grid-area:title}
+.split>.clip{grid-area:clip}
+.split>.body{grid-area:body}
+@media (max-width:700px){
+  .split{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-template-areas:"title" "clip" "body"}
+}
+.clip{margin:0 0 18px;max-width:320px}
+.clip iframe{display:block;width:100%;aspect-ratio:9/16;max-height:72vh;border:2px solid var(--line);border-radius:10px;background:#0a1a20}
+
 label.nl{display:block;margin-top:16px;font-weight:600}
+input[type=text],input[type=email],textarea{display:block;width:100%;max-width:62ch;border:2px solid var(--line);background:var(--panel);color:var(--text);
+  border-radius:8px;padding:9px 12px;font:400 16px/1.5 "Golos Text",sans-serif}
+textarea.note{min-height:6em;resize:vertical;border-left:4px solid var(--btn);border-radius:0 8px 8px 0}
+::placeholder{color:var(--muted)}
+
 ul.err{padding-left:20px;max-width:62ch}
 ul.err li{margin-bottom:8px}
-.gal{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:18px}
+
+form.card{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:6px 18px 18px;max-width:460px}
+form.card input{background:var(--bg)}
+form.card .btn{margin-top:16px}
+#cStatus{margin:12px 0 0;min-height:1.6em;color:var(--muted);font-size:15px}
+
 footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);font-size:14px}
 
 #up{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));
@@ -97,24 +125,23 @@ footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);f
 </style>
 </head>
 <body>
-<div class="wrap">
   <header class="top">
     <span class="brand">Mirage за Т</span>
     <!-- ИНТЕРАКТИВ 1: переключатель темы (запоминает выбор в браузере) -->
-    <button class="btn ghost" id="theme" type="button" aria-pressed="true">Тёмная тема</button>
+    <button class="btn ghost" id="theme" type="button">Тёмная тема</button>
   </header>
 
   <main>
-    <div class="hero">
+    <section class="hero">
       <!-- ЗАГОЛОВОК 1: назван результат («два смока») и объекты («окно, коннектор»),
            чтобы тема была понятна с первой секунды. -->
       <h1>Два смока на Mirage за Т: окно и коннектор</h1>
       <p class="lead">Короткий разбор двух бросков, которые закрывают самые опасные линии обзора на миде: что они делают, когда их кидать и где чаще всего ошибаются.</p>
       <figure class="photo wide">
-        <img src="https://images.unsplash.com/photo-1723792306904-c417c0da40e3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" width="1400" height="934" alt="Игровое рабочее место с розово-фиолетовой подсветкой: изогнутый монитор с наушниками, системный блок со стеклянной стенкой и игровое кресло" fetchpriority="high">
+        <img src="https://images.unsplash.com/photo-1723792306904-c417c0da40e3?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=NHwxMjA3fDA%3D" width="1400" height="612" alt="Игровое рабочее место с розово-фиолетовой подсветкой: изогнутый монитор с наушниками, системный блок со стеклянной стенкой и игровое кресло" fetchpriority="high">
         <figcaption>Удобное место и порядок на столе помогают тренировать броски без спешки.</figcaption>
       </figure>
-    </div>
+    </section>
 
     <section id="why">
       <!-- ЗАГОЛОВОК 2: вопрос «зачем», потому что читатель сначала хочет понять пользу. -->
@@ -123,38 +150,32 @@ footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);f
       <p>Два смока убирают эти две линии. Команда получает несколько спокойных секунд, чтобы занять мид и сыграть дальше без лишних потерь.</p>
     </section>
 
-    <section id="window">
-      <div class="split">
-        <div class="clip">
-          <video id="v1" src="https://www.youtube.com/shorts/YEmLbvr-_U4?feature=share" controls="" playsinline="" preload="metadata" aria-label="Видео: бросок смока на окно на Mirage"></video>
-          <button class="btn alt" type="button" data-v="v1">Смотреть заново</button>
-        </div>
-        <div>
-          <!-- ЗАГОЛОВОК 3: название совпадает с вкладкой/клипом, чтобы клип и текст читались вместе. -->
-          <h2>Смок на окно</h2>
-          <p>Окно даёт защитнику обзор почти на весь мид. Дым в нём закрывает снайперу картинку и не даёт получить выстрел в первые секунды выхода.</p>
-          <p>Бросок показан в клипе. Повторяй его на тренировочной карте, пока он не будет получаться с первой попытки.</p>
-          <label class="nl" for="n-window">Мои заметки по броску</label>
-          <div class="note" id="n-window" contenteditable="true" role="textbox" aria-multiline="true" data-f="window" data-ph="Где встать, куда целиться, как бросать"></div>
-        </div>
-      </div>
+    <section id="window" class="split">
+      <!-- ЗАГОЛОВОК 3: название совпадает с клипом, чтобы клип и текст читались вместе. -->
+      <h2>Смок на окно <small>Window</small></h2>
+      <figure class="clip">
+        <iframe src="https://www.youtube.com/embed/YEmLbvr-_U4" title="Видео: бросок смока на окно (Window) на Mirage" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </figure>
+      <article class="body">
+        <p>Окно даёт защитнику обзор почти на весь мид. Дым в нём закрывает снайперу картинку и не даёт получить выстрел в первые секунды выхода.</p>
+        <p>Бросок показан в клипе. Повторяй его на тренировочной карте, пока он не будет получаться с первой попытки.</p>
+        <label class="nl" for="n-window">Мои заметки по броску</label>
+        <textarea class="note" id="n-window" data-f="window" placeholder="Где встать, куда целиться, как бросать"></textarea>
+      </article>
     </section>
 
-    <section id="connector">
-      <div class="split">
-        <div class="clip">
-          <video id="v2" src="https://www.youtube.com/shorts/fC0I6F80izs" controls="" playsinline="" preload="metadata" aria-label=""></video>
-          <button class="btn alt" type="button" data-v="v2">Смотреть заново</button>
-        </div>
-        <div>
-          <!-- ЗАГОЛОВОК 4: то же правило, что у предыдущего: имя броска = имя клипа. -->
-          <h2>Смок на коннектор</h2>
-          <p>Коннектор связывает мид с позициями защиты у точки A. Через него защитники подтягиваются в мид и стреляют по вашей команде сбоку.</p>
-          <p>Если смок лёг точно, проход закрыт: ротация слышна, но не видна, и команда спокойно играет мид.</p>
-          <label class="nl" for="n-connector">Мои заметки по броску</label>
-          <div class="note" id="n-connector" contenteditable="true" role="textbox" aria-multiline="true" data-f="connector" data-ph="Где встать, куда целиться, как бросать"></div>
-        </div>
-      </div>
+    <section id="connector" class="split">
+      <!-- ЗАГОЛОВОК 4: то же правило, что у предыдущего: имя броска = имя клипа. -->
+      <h2>Смок на коннектор <small>Connector</small></h2>
+      <figure class="clip">
+        <iframe src="https://www.youtube.com/embed/fC0I6F80izs" title="Видео: бросок смока на коннектор (Connector) на Mirage" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </figure>
+      <article class="body">
+        <p>Коннектор связывает мид с позициями защиты у точки A. Через него защитники подтягиваются в мид и стреляют по вашей команде сбоку.</p>
+        <p>Если смок лёг точно, проход закрыт: ротация слышна, но не видна, и команда спокойно играет мид.</p>
+        <label class="nl" for="n-connector">Мои заметки по броску</label>
+        <textarea class="note" id="n-connector" data-f="connector" placeholder="Где встать, куда целиться, как бросать"></textarea>
+      </article>
     </section>
 
     <section id="when">
@@ -175,24 +196,32 @@ footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);f
     </section>
 
     <section id="train">
-      <!-- ЗАГОЛОВОК 7: глагол «тренируйся» в повелительном наклонении, потому что блок — это инструкция. -->
+      <!-- ЗАГОЛОВОК 7: «как тренироваться» — это инструкция, поэтому текст написан в повелительном наклонении. -->
       <h2>Как тренироваться</h2>
       <p>Включи тренировочный режим или карту с ботами и повторяй каждый бросок подряд по десять раз. Считай только те, что легли точно. Когда получается восемь из десяти, переходи к игре с командой.</p>
-      <div class="gal">
-        <figure class="photo sq">
-          <img src="https://images.unsplash.com/photo-1645802106095-765b7e86f5bb?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" width="900" height="1200" loading="lazy" alt="Крупный план игровой клавиатуры с розово-голубой подсветкой клавиш">
-          <figcaption>Любой бросок начинается с рук на клавиатуре: сначала повторение, потом игра.</figcaption>
-        </figure>
-        <figure class="photo sq">
-          <img src="https://images.unsplash.com/photo-1725629021424-ba7b8ce8848b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" width="1000" height="667" loading="lazy" alt="Тёмная комната с фиолетовой подсветкой: стол с монитором, игровой мышью и клавиатурой, на стене два светящихся постера">
-          <figcaption>Подсветка и свой уголок для игры помогают сосредоточиться на тренировке.</figcaption>
-        </figure>
-      </div>
+    </section>
+
+    <section id="contact">
+      <!-- ЗАГОЛОВОК 8: вопрос к читателю, после которого логично идёт форма. -->
+      <h2>Остались вопросы?</h2>
+      <p>Оставь имя и почту, и мы ответим по броскам на окно и коннектор.</p>
+      <!-- ИНТЕРАКТИВ 3: форма обратной связи (имя, email, кнопка «Отправить») -->
+      <form class="card" id="contactForm">
+        <label class="nl" for="c-name">Имя</label>
+        <input type="text" id="c-name" name="name" maxlength="60" required="" autocomplete="name">
+        <label class="nl" for="c-email">Email</label>
+        <input type="email" id="c-email" name="email" maxlength="120" required="" autocomplete="email" placeholder="name@example.com">
+        <button class="btn" type="submit" id="cBtn">Отправить</button>
+        <p id="cStatus" role="status" aria-live="polite"></p>
+      </form>
     </section>
   </main>
 
-  <footer>Фотографии: Unsplash. Видео с бросками: каналы Carletti и fraz0tv на YouTube.</footer>
-</div>
+  <footer>
+    Фото: Unsplash. Видео с бросками:
+    <a href="https://www.youtube.com/shorts/YEmLbvr-_U4" rel="noopener">смок на окно</a>,
+    <a href="https://www.youtube.com/shorts/fC0I6F80izs" rel="noopener">смок на коннектор</a> (YouTube; каналы Carletti и fraz0tv).
+  </footer>
 
 <!-- ИНТЕРАКТИВ 2: кнопка «Наверх» (появляется после прокрутки) -->
 <button id="up" type="button" aria-label="Наверх">↑</button>
@@ -203,18 +232,12 @@ footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);f
 
   /* Тема */
   var tbtn=document.getElementById("theme");
-  function applyTheme(t){
-    root.setAttribute("data-theme",t);
-    tbtn.setAttribute("aria-pressed",t==="light");
-    tbtn.textContent=t==="light"?"Тёмная тема":"Светлая тема";
-  }
-  var saved="";
-  try{saved=localStorage.getItem("mir3:theme")||""}catch(e){}
-  if(!saved&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)saved="light";
-  applyTheme(saved==="light"?"light":"dark");
+  function label(){tbtn.textContent=root.getAttribute("data-theme")==="light"?"Тёмная тема":"Светлая тема"}
+  label();
   tbtn.addEventListener("click",function(){
     var next=root.getAttribute("data-theme")==="light"?"dark":"light";
-    applyTheme(next);
+    root.setAttribute("data-theme",next);
+    label();
     try{localStorage.setItem("mir3:theme",next)}catch(e){}
   });
 
@@ -224,18 +247,30 @@ footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);f
   window.addEventListener("scroll",onScroll,{passive:true});onScroll();
   up.addEventListener("click",function(){window.scrollTo({top:0})});
 
-  /* Видео: одновременно играет только одно; кнопка «Смотреть заново» */
-  var vs=document.querySelectorAll("video");
-  vs.forEach(function(v){v.addEventListener("play",function(){vs.forEach(function(o){if(o!==v)o.pause()})})});
-  document.querySelectorAll("[data-v]").forEach(function(b){
-    b.addEventListener("click",function(){var v=document.getElementById(b.dataset.v);v.currentTime=0;v.play().catch(function(){})});
+  /* Заметки сохраняются в браузере */
+  document.querySelectorAll("textarea[data-f]").forEach(function(el){
+    var k="mir3:"+el.dataset.f;
+    try{el.value=localStorage.getItem(k)||""}catch(e){}
+    el.addEventListener("input",function(){try{localStorage.setItem(k,el.value)}catch(e){}});
   });
 
-  /* Заметки сохраняются в браузере */
-  document.querySelectorAll("[data-f]").forEach(function(el){
-    var k="mir3:"+el.dataset.f;
-    try{el.textContent=localStorage.getItem(k)||""}catch(e){}
-    el.addEventListener("input",function(){try{localStorage.setItem(k,el.textContent)}catch(e){}});
+  /* Форма обратной связи */
+  var ENDPOINT=""; /* вставьте адрес приёма заявок, например https://formspree.io/f/xxxxxxx */
+  var cf=document.getElementById("contactForm"),cs=document.getElementById("cStatus"),cb=document.getElementById("cBtn");
+  cf.addEventListener("submit",function(e){
+    e.preventDefault();
+    var name=document.getElementById("c-name").value.trim();
+    var email=document.getElementById("c-email").value.trim();
+    if(!name||!email){cs.textContent="Заполните имя и email.";return}
+    if(!ENDPOINT){
+      cs.textContent="Демо-режим: форма пока не подключена к серверу, данные не отправлены.";
+      return;
+    }
+    cb.disabled=true;cs.textContent="Отправляем…";
+    fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({name:name,email:email})})
+      .then(function(r){if(!r.ok)throw new Error("http");cs.textContent="Спасибо! Заявка отправлена.";cf.reset()})
+      .catch(function(){cs.textContent="Не удалось отправить. Попробуйте ещё раз позже."})
+      .then(function(){cb.disabled=false});
   });
 })();
 </script>
