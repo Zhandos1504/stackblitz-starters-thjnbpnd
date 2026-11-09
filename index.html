@@ -1,4 +1,5 @@
-<html lang="ru" data-theme="dark" style=""><head>
+<DOCTYPE HTML>
+<html lang="ru" data-theme="dark"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Смоки Mirage: окно и коннектор — гайд по CS2</title>
@@ -19,222 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&amp;family=Golos+Text:wght@400;600&amp;display=swap" rel="stylesheet">
   
-  <style>
-  /* ===== Токены. Фон и шрифты сняты с макета v0, акцент золотой, как на основном сайте ===== */
-  :root{
-    --bg:#0f2629;
-    --card:#163338;
-    --line:#2a4a50;
-    --text:#ecd9a8;
-    --muted:#a3b9bc;
-    --accent:#f2b632;
-    --accent-text:#f2b632;
-    --on-accent:#2b1e00;
-    --focus:#f2b632;
-  
-    --font-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
-    --font-head:"Oswald",Impact,"Arial Narrow",sans-serif;
-  
-    --pad:16px;            /* боковой отступ: 16 px на телефоне */
-    --sec:56px;            /* вертикальный отступ секций: 56 px на телефоне */
-    --radius:12px;
-    --card-pad:24px;
-  }
-  :root[data-theme="light"]{
-    --bg:#eef6f6;
-    --card:#ffffff;
-    --line:#c5d9d9;
-    --text:#0f2629;
-    --muted:#4b6168;
-    --accent-text:#7a4f00;
-    --focus:#7a4f00;
-  }
-  
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-  body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.65 var(--font-body);
-    padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
-  img,iframe{max-width:100%}
-  a{color:inherit}
-  :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
-  
-  h1,h2,h3{font-family:var(--font-head);text-transform:uppercase;line-height:1.1;margin:0;text-wrap:balance}
-  h1{font-size:36px;font-weight:700}
-  h2{font-size:30px;font-weight:700}
-  h3{font-size:22px;font-weight:700}
-  p{margin:0;text-wrap:pretty}
-  ul,ol{margin:0;padding:0;list-style:none}
-  
-  /* Контент ограничен 1152 px, а фон секций идёт во всю ширину */
-  body>header,main>section,body>footer{padding-inline:max(var(--pad),calc((100% - 1152px)/2))}
-  main>section{padding-block:var(--sec);scroll-margin-top:64px}
-  main>section.hero{padding-top:24px}
-  
-  .eyebrow{font:500 13px/1.2 var(--font-head);letter-spacing:.3em;text-transform:uppercase;color:var(--accent-text);margin:0 0 10px}
-  .head{margin-bottom:28px}
-  .muted{color:var(--muted)}
-  
-  .skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--on-accent);padding:8px 14px;border-radius:8px;z-index:100;font-weight:600}
-  .skip:focus{left:8px}
-  
-  /* ===== Шапка ===== */
-  body>header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;
-    min-height:56px;border-bottom:1px solid var(--line);
-    background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 18px/1 var(--font-head);text-transform:uppercase;letter-spacing:.04em}
-  .brand b{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:15px}
-  .brand span span{color:var(--accent-text)}
-  body>header nav{display:none}
-  body>header nav ul{display:flex;flex-wrap:wrap;justify-content:center;gap:0 24px;font-size:14px;color:var(--muted)}
-  body>header nav a{display:flex;align-items:center;min-height:44px;text-decoration:none;transition:color .15s}
-  body>header nav a:hover{color:var(--accent-text)}
-  .icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
-  .icon-btn:hover{border-color:var(--accent);color:var(--accent-text)}
-  .icon-btn svg{width:20px;height:20px}
-  :root[data-theme="dark"] .i-moon,:root[data-theme="light"] .i-sun{display:none}
-  
-  /* ===== Главный экран ===== */
-  .hero p.lead{margin-top:16px;color:var(--muted);font-size:17px;max-width:42rem}
-  .hero figure{position:relative;margin:28px 0 0;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line)}
-  .hero img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:var(--card)}
-  .hero figcaption{position:absolute;left:12px;bottom:12px;right:12px;width:fit-content;max-width:calc(100% - 24px);
-    padding:6px 12px;border-radius:8px;font-size:13px;color:var(--text);
-    background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-  
-  /* ===== Карточки ===== */
-  .cards{--gap:16px;--cols:1;display:flex;flex-direction:column;gap:var(--gap)}
-  .cards>li{min-width:0}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:var(--card-pad)}
-  .why .card{display:flex;flex-direction:column;gap:12px}
-  .why .card svg{width:28px;height:28px;color:var(--accent-text)}
-  .why .card p,.mistakes .card p{color:var(--muted)}
-  
-  /* ===== Раскидки ===== */
-  .lineups .cards{--gap:20px}
-  .card.lineup{display:flex;flex-direction:column;gap:20px;padding:0;overflow:hidden}
-  .lineup>iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#0a1a20}
-  .lineup .body{padding:0 var(--card-pad) var(--card-pad);display:flex;flex-direction:column;gap:18px}
-  .lineup h3 small{font:500 .55em var(--font-body);text-transform:none;letter-spacing:0;color:var(--muted);margin-left:6px}
-  dl{display:grid;gap:4px 16px;margin:0;font-size:15px}
-  dt{font:500 14px/1.6 var(--font-head);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-text);margin-top:8px}
-  dd{margin:0;color:var(--muted)}
-  .field label{display:block;font-weight:600;font-size:15px;margin-bottom:6px}
-  .field input,.field textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:8px;
-    padding:12px;font:400 16px/1.5 var(--font-body)}   /* 16 px: iOS не приближает поле при фокусе */
-  .field textarea{min-height:96px;resize:vertical}
-  ::placeholder{color:var(--muted)}
-  .field input:focus-visible,.field textarea:focus-visible{outline-offset:1px;border-color:var(--accent)}
-  
-  /* ===== Тайминг ===== */
-  .steps{background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
-  .steps li{display:flex;flex-direction:column;gap:6px;padding:20px var(--card-pad)}
-  .steps li+li{border-top:1px solid var(--line)}
-  .steps strong{font:500 18px/1.2 var(--font-head);text-transform:uppercase;letter-spacing:.03em;color:var(--accent-text)}
-  .steps p{color:var(--muted)}
-  
-  /* ===== Ошибки ===== */
-  .mistakes .card{display:flex;gap:16px}
-  .mistakes .num{font:700 40px/1 var(--font-head);color:var(--accent-text)}
-  .mistakes .card>article{min-width:0}   /* flex-элемент по умолчанию не сжимается меньше своего содержимого */
-  .mistakes h3{margin-bottom:8px;font-size:20px;overflow-wrap:break-word}
-  
-  /* ===== Форма ===== */
-  .signup form{display:flex;flex-direction:column;gap:16px}
-  .signup header p{margin-top:12px}
-  .signup .box{display:flex;flex-direction:column;gap:24px;border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
-  .btn{display:inline-flex;justify-content:center;align-items:center;min-height:48px;padding:12px 20px;border-radius:8px;border:0;
-    background:var(--accent);color:var(--on-accent);font:700 17px/1 var(--font-head);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:opacity .15s}
-  .btn:hover{opacity:.9}
-  .btn[disabled]{opacity:.6;cursor:progress}
-  #formMsg{min-height:1.6em;font-size:15px;color:var(--muted)}
-  
-  /* ===== Галерея смоков: Grid с auto-fit ===== */
-  .gallery-grid{
-    display:grid;
-    /* auto-fit: сколько колонок по 240 px+ влезает, столько и будет; свободное место делят карточки.
-       min(100%,240px) не даёт сетке вылезти за экран на узком телефоне */
-    grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));
-    gap:16px;
-  }
-  .g-item{min-width:0;display:flex}
-  .g-card{
-    display:flex;flex-direction:column;width:100%;padding:0;overflow:hidden;text-align:left;cursor:pointer;
-    background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
-    font:inherit;transition:transform .2s,border-color .2s,box-shadow .2s;
-  }
-  .g-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 10px 24px rgb(0 0 0/.25)}
-  .g-art{
-    position:relative;display:grid;place-items:center;aspect-ratio:16/9;overflow:hidden;
-    background:
-      radial-gradient(circle at 30% 60%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 55%),
-      radial-gradient(circle at 75% 35%,color-mix(in srgb,var(--text) 22%,transparent),transparent 50%),
-      var(--bg);
-    border-bottom:1px solid var(--line);
-  }
-  .g-art b{font:700 34px/1 var(--font-head);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-text)}
-  .g-art i{position:absolute;top:10px;left:12px;font:500 13px/1 var(--font-head);letter-spacing:.2em;color:var(--muted);font-style:normal}
-  .g-body{display:flex;flex-direction:column;gap:8px;padding:16px var(--card-pad) var(--card-pad)}
-  .g-body h3{font-size:20px}
-  .g-body p{color:var(--muted);font-size:15px}
-  .g-more{margin-top:4px;font:500 14px/1 var(--font-head);text-transform:uppercase;letter-spacing:.08em;color:var(--accent-text)}
-  
-  /* Анимация появления: карточки всплывают снизу по очереди (задержка = --i × 70 мс).
-     Состояние «скрыто» включает только JS (класс armed), поэтому без скриптов карточки видны сразу. */
-  @keyframes rise{
-    from{opacity:0;transform:translateY(28px) scale(.96)}
-    to{opacity:1;transform:none}
-  }
-  .gallery.armed .g-item{opacity:0}
-  .gallery.armed .g-item.in{animation:rise .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i) * 70ms)}
-  @media (prefers-reduced-motion:reduce){
-    .gallery.armed .g-item.in{animation:none;opacity:1}
-    .g-card:hover{transform:none}
-  }
-  
-  /* ===== Модальное окно ===== */
-  dialog.modal{
-    width:min(560px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:var(--card-pad);
-    background:var(--card);color:var(--text);border:1px solid var(--accent);border-radius:var(--radius);
-  }
-  dialog.modal::backdrop{background:rgb(5 15 17/.72);backdrop-filter:blur(3px)}
-  dialog.modal[open]{animation:rise .3s ease both}
-  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
-  .modal-head small{display:block;margin-top:6px;font:500 13px/1 var(--font-head);letter-spacing:.2em;color:var(--accent-text)}
-  .modal dl{margin-bottom:20px}
-  .modal .btn{width:100%}
-  
-  body>footer{border-top:1px solid var(--line);padding-block:24px;color:var(--muted);font-size:14px}
-  body>footer a{color:var(--accent-text)}
-  
-  /* ===== Планшет и выше (≥768 px): всё, что меняется на широком экране ===== */
-  @media (min-width:768px){
-    :root{--pad:24px;--sec:80px;}
-    h1{font-size:60px}
-    h2{font-size:40px}
-    body>header nav{display:flex;flex:1;justify-content:center}
-    main>section.hero{padding-top:48px}
-    .hero p.lead{font-size:19px}
-    .hero img{aspect-ratio:21/9}
-    .hero figcaption{left:16px;bottom:16px;font-size:14px}
-    .cards{flex-direction:row;flex-wrap:wrap}
-    .cards>li{flex:1 1 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols))}
-    .why .cards,.mistakes .cards{--cols:3}
-    .lineups .cards{--cols:2}
-    .steps li{flex-direction:row;align-items:baseline;gap:32px}
-    .steps strong{flex:0 0 16rem}
-    .signup .box{flex-direction:row;padding:40px;gap:40px}
-    .signup .box>*{flex:1 1 0;min-width:0}
-  }
-  /* на планшете колонки узкие: номер ставим над текстом, чтобы слова не рвались */
-  @media (min-width:768px) and (max-width:1023px){
-    .mistakes .card{flex-direction:column;gap:8px}
-  }
-  @media (min-width:480px){
-    dl{grid-template-columns:5.5rem 1fr;gap:10px 16px}
-    dt{margin-top:0}
-  }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
   <a class="skip" href="#main">К содержимому</a>
@@ -332,35 +118,35 @@
       </ul>
     </section>
   
-    <section class="gallery armed" id="gallery" aria-labelledby="gallery-t">
+    <section class="gallery" id="gallery" aria-labelledby="gallery-t">
       <header class="head">
         <p class="eyebrow">Галерея</p>
         <h2 id="gallery-t">Восемь смоков, которые стоит знать</h2>
         <p class="muted" style="margin-top:12px">Нажмите на карточку: что смок закрывает и когда его бросать. Точные точки и прицелы смотрите в видео выше и в игре.</p>
       </header>
       <ul class="gallery-grid">
-        <li class="g-item in" style="--i:0"><button class="g-card" type="button" data-en="Window" data-name="Окно" data-closes="Обзор снайпера из окна на весь мид." data-when="Со спавна, до выхода команды на мид." data-tip="Вместе с коннектором даёт самый безопасный выход на мид."><span class="g-art"><i>01</i><b>Window</b></span><span class="g-body"><h3>Окно</h3><p>Закрывает снайперскую позицию на миде.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:1"><button class="g-card" type="button" data-en="Connector" data-name="Коннектор" data-closes="Проход, по которому защитники подтягиваются к миду от точки A." data-when="Перед выходом на мид, чтобы дым не рассеялся раньше времени." data-tip="Заранее скажите в голосовом чате, кто бросает."><span class="g-art"><i>02</i><b>Connector</b></span><span class="g-body"><h3>Коннектор</h3><p>Закрывает ротацию защитников через проход.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:2"><button class="g-card" type="button" data-en="Jungle" data-name="Джангл" data-closes="Обзор из джанглов на подходе к A-сайту." data-when="В начале атаки на A, перед заходом на сайт." data-tip="Бросайте вместе с другими смоками, чтобы закрыть все углы сразу."><span class="g-art"><i>03</i><b>Jungle</b></span><span class="g-body"><h3>Джангл</h3><p>Прячет угол из джанглов при атаке на A.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:3"><button class="g-card" type="button" data-en="Stairs" data-name="Стэрс" data-closes="Обзор с лестницы, которая смотрит на A-сайт." data-when="В момент захода на сайт A." data-tip="Дым живёт недолго: бросайте за пару секунд до входа."><span class="g-art"><i>04</i><b>Stairs</b></span><span class="g-body"><h3>Стэрс</h3><p>Убирает обзор с лестницы у A-сайта.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:4"><button class="g-card" type="button" data-en="CT" data-name="CT-спавн" data-closes="Выглядывание защитника со стороны CT-спавна на A-сайт." data-when="В начале исполнения A, до выхода игроков на сайт." data-tip="Не перекрывайте себе проход: дым должен закрывать угол, а не путь."><span class="g-art"><i>05</i><b>CT</b></span><span class="g-body"><h3>CT-спавн</h3><p>Закрывает угол со стороны спавна защитников.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:5"><button class="g-card" type="button" data-en="Palace" data-name="Палас" data-closes="Позицию в паласе, которая простреливает вход на A-сайт." data-when="Перед заходом на A по рампе." data-tip="Покажите смок команде в тренировке, чтобы все знали, где он ляжет."><span class="g-art"><i>06</i><b>Palace</b></span><span class="g-body"><h3>Палас</h3><p>Прячет защитника в паласе при входе на A.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:6"><button class="g-card" type="button" data-en="Short" data-name="Короткий проход" data-closes="Обзор вдоль короткого прохода к A-сайту." data-when="Когда команда готова заходить коротким проходом." data-tip="Тренируйте бросок на карте с ботами, пока рука не запомнит его."><span class="g-art"><i>07</i><b>Short</b></span><span class="g-body"><h3>Короткий проход</h3><p>Перекрывает линию вдоль короткого прохода.</p><span class="g-more">Подробнее →</span></span></button></li>
-        <li class="g-item in" style="--i:7"><button class="g-card" type="button" data-en="Market" data-name="Маркет" data-closes="Окно маркета, из которого видно часть B-сайта и подходы." data-when="Перед заходом на B через аппартаменты или маркет." data-tip="Смок работает, только если бросок повторён из той же точки."><span class="g-art"><i>08</i><b>Market</b></span><span class="g-body"><h3>Маркет</h3><p>Закрывает окно маркета при атаке на B.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:0"><button class="g-card" type="button" data-en="Window" data-name="Окно" data-closes="Обзор снайпера из окна на весь мид." data-when="Со спавна, до выхода команды на мид." data-tip="Вместе с коннектором даёт самый безопасный выход на мид."><span class="g-art"><i>01</i><b>Window</b></span><span class="g-body"><h3>Окно</h3><p>Закрывает снайперскую позицию на миде.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:1"><button class="g-card" type="button" data-en="Connector" data-name="Коннектор" data-closes="Проход, по которому защитники подтягиваются к миду от точки A." data-when="Перед выходом на мид, чтобы дым не рассеялся раньше времени." data-tip="Заранее скажите в голосовом чате, кто бросает."><span class="g-art"><i>02</i><b>Connector</b></span><span class="g-body"><h3>Коннектор</h3><p>Закрывает ротацию защитников через проход.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:2"><button class="g-card" type="button" data-en="Jungle" data-name="Джангл" data-closes="Обзор из джанглов на подходе к A-сайту." data-when="В начале атаки на A, перед заходом на сайт." data-tip="Бросайте вместе с другими смоками, чтобы закрыть все углы сразу."><span class="g-art"><i>03</i><b>Jungle</b></span><span class="g-body"><h3>Джангл</h3><p>Прячет угол из джанглов при атаке на A.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:3"><button class="g-card" type="button" data-en="Stairs" data-name="Стэрс" data-closes="Обзор с лестницы, которая смотрит на A-сайт." data-when="В момент захода на сайт A." data-tip="Дым живёт недолго: бросайте за пару секунд до входа."><span class="g-art"><i>04</i><b>Stairs</b></span><span class="g-body"><h3>Стэрс</h3><p>Убирает обзор с лестницы у A-сайта.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:4"><button class="g-card" type="button" data-en="CT" data-name="CT-спавн" data-closes="Выглядывание защитника со стороны CT-спавна на A-сайт." data-when="В начале исполнения A, до выхода игроков на сайт." data-tip="Не перекрывайте себе проход: дым должен закрывать угол, а не путь."><span class="g-art"><i>05</i><b>CT</b></span><span class="g-body"><h3>CT-спавн</h3><p>Закрывает угол со стороны спавна защитников.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:5"><button class="g-card" type="button" data-en="Palace" data-name="Палас" data-closes="Позицию в паласе, которая простреливает вход на A-сайт." data-when="Перед заходом на A по рампе." data-tip="Покажите смок команде в тренировке, чтобы все знали, где он ляжет."><span class="g-art"><i>06</i><b>Palace</b></span><span class="g-body"><h3>Палас</h3><p>Прячет защитника в паласе при входе на A.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:6"><button class="g-card" type="button" data-en="Short" data-name="Короткий проход" data-closes="Обзор вдоль короткого прохода к A-сайту." data-when="Когда команда готова заходить коротким проходом." data-tip="Тренируйте бросок на карте с ботами, пока рука не запомнит его."><span class="g-art"><i>07</i><b>Short</b></span><span class="g-body"><h3>Короткий проход</h3><p>Перекрывает линию вдоль короткого прохода.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item" style="--i:7"><button class="g-card" type="button" data-en="Market" data-name="Маркет" data-closes="Окно маркета, из которого видно часть B-сайта и подходы." data-when="Перед заходом на B через аппартаменты или маркет." data-tip="Смок работает, только если бросок повторён из той же точки."><span class="g-art"><i>08</i><b>Market</b></span><span class="g-body"><h3>Маркет</h3><p>Закрывает окно маркета при атаке на B.</p><span class="g-more">Подробнее →</span></span></button></li>
       </ul>
     </section>
   
     <dialog class="modal" id="gdlg" aria-labelledby="gdlg-t">
       <div class="modal-head">
-        <div><h2 id="gdlg-t" style="font-size:32px">Окно</h2><small id="gdlg-en">Window</small></div>
+        <div><h2 id="gdlg-t" style="font-size:32px"></h2><small id="gdlg-en"></small></div>
         <button class="icon-btn" id="gdlg-x" type="button" aria-label="Закрыть">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
         </button>
       </div>
       <dl>
-        <dt>Закрывает</dt><dd id="gdlg-closes">Обзор снайпера из окна на весь мид.</dd>
-        <dt>Когда</dt><dd id="gdlg-when">Со спавна, до выхода команды на мид.</dd>
-        <dt>Совет</dt><dd id="gdlg-tip">Вместе с коннектором даёт самый безопасный выход на мид.</dd>
+        <dt>Закрывает</dt><dd id="gdlg-closes"></dd>
+        <dt>Когда</dt><dd id="gdlg-when"></dd>
+        <dt>Совет</dt><dd id="gdlg-tip"></dd>
       </dl>
       <button class="btn" id="gdlg-ok" type="button">Понятно</button>
     </dialog>
@@ -417,70 +203,7 @@
       <a href="https://www.youtube.com/shorts/fC0I6F80izs" rel="noopener">коннектор</a> (YouTube).</p>
   </footer>
   
-  <script>
-  (function(){
-    var root=document.documentElement;
-  
-    document.getElementById("theme").addEventListener("click",function(){
-      var next=root.getAttribute("data-theme")==="light"?"dark":"light";
-      root.setAttribute("data-theme",next);
-      try{localStorage.setItem("mirage:theme",next)}catch(e){}
-    });
-  
-    /* Галерея: появление карточек при прокрутке */
-    var gallery=document.getElementById("gallery");
-    var items=gallery.querySelectorAll(".g-item");
-    if("IntersectionObserver" in window){
-      gallery.classList.add("armed");
-      var io=new IntersectionObserver(function(entries){
-        entries.forEach(function(en){
-          if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target)}
-        });
-      },{threshold:0.15});
-      items.forEach(function(el){io.observe(el)});
-    }
-  
-    /* Модальное окно: один общий <dialog>, содержимое берётся из data-атрибутов нажатой карточки */
-    var dlg=document.getElementById("gdlg");
-    gallery.addEventListener("click",function(e){
-      var card=e.target.closest(".g-card");
-      if(!card)return;
-      document.getElementById("gdlg-t").textContent=card.dataset.name;
-      document.getElementById("gdlg-en").textContent=card.dataset.en;
-      document.getElementById("gdlg-closes").textContent=card.dataset.closes;
-      document.getElementById("gdlg-when").textContent=card.dataset.when;
-      document.getElementById("gdlg-tip").textContent=card.dataset.tip;
-      dlg.showModal();
-      root.style.overflow="hidden";
-    });
-    document.getElementById("gdlg-x").addEventListener("click",function(){dlg.close()});
-    document.getElementById("gdlg-ok").addEventListener("click",function(){dlg.close()});
-    dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.close()}); /* клик по затемнению */
-    dlg.addEventListener("close",function(){root.style.overflow=""});
-  
-    /* Заметки сохраняются в браузере */
-    document.querySelectorAll("textarea[data-f]").forEach(function(el){
-      var k="mirage:"+el.dataset.f;
-      try{el.value=localStorage.getItem(k)||""}catch(e){}
-      el.addEventListener("input",function(){try{localStorage.setItem(k,el.value)}catch(e){}});
-    });
-  
-    /* Форма. Пока ENDPOINT пустой, данные никуда не уходят (демо-режим) */
-    var ENDPOINT=""; /* например https://formspree.io/f/xxxxxxx */
-    var form=document.getElementById("signupForm"),msg=document.getElementById("formMsg"),btn=document.getElementById("formBtn");
-    form.addEventListener("submit",function(e){
-      e.preventDefault();
-      var name=form.name.value.trim(),email=form.email.value.trim();
-      if(!name||!/^\S+@\S+\.\S+$/.test(email)){msg.textContent="Введите имя и корректный email.";return}
-      if(!ENDPOINT){msg.textContent="Демо-режим: форма пока не подключена к серверу, данные не отправлены.";return}
-      btn.disabled=true;msg.textContent="Отправляем…";
-      fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({name:name,email:email})})
-        .then(function(r){if(!r.ok)throw new Error("http");msg.textContent="Спасибо! Вы подписаны.";form.reset()})
-        .catch(function(){msg.textContent="Не удалось отправить. Попробуйте позже."})
-        .then(function(){btn.disabled=false});
-    });
-  })();
-  </script>
+  <script src="js/main.js"></script>
   
   
   </body></html>
