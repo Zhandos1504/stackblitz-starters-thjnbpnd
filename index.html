@@ -1,274 +1,483 @@
-<!DOCTYPE html>
-<html lang="ru" data-theme="light"><head>
+<html lang="ru" data-theme="dark" style=""><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Два смока на Mirage за Т: окно и коннектор</title>
-  <meta name="description" content="Разбор двух смоков на Mirage за Т: Window и Connector. Когда бросать и где чаще всего ошибаются.">
+  <title>Смоки Mirage: окно и коннектор — гайд по CS2</title>
+  <meta name="description" content="Два ключевых смока на карте Mirage: окно и коннектор. Видео-раскидки, тайминги, частые ошибки и заметки.">
+  <meta name="theme-color" content="#0f2629" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef6f6" media="(prefers-color-scheme: light)">
   
   <script>
-  /* Тема выбирается до отрисовки страницы, чтобы не было вспышки не той темы */
+  /* Тема выбирается до отрисовки, чтобы не было вспышки. По умолчанию тёмная, как в макете. */
   (function(){
     var t="";
-    try{t=localStorage.getItem("mir3:theme")||""}catch(e){}
-    if(!t&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)t="light";
+    try{t=localStorage.getItem("mirage:theme")||""}catch(e){}
     document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark");
   })();
   </script>
   
-  <!-- ШРИФТЫ (Google Fonts):
-       Russo One (заголовки): плотный, угловатый, похожий на военную маркировку и игровые интерфейсы,
-         поэтому сразу задаёт тему шутера; есть кириллица.
-       Golos Text (основной текст): спокойный гротеск, сделан для чтения с экрана и хорошо
-         работает с русским текстом, поэтому длинные абзацы читаются легко. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&amp;family=Golos+Text:wght@400;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&amp;family=Golos+Text:wght@400;600&amp;display=swap" rel="stylesheet">
   
   <style>
-  /* ПАЛИТРА (собрана на coolors.co: https://coolors.co/10252e-173540-ecd9a8-f2b632-2fb5a8):
-     тёмно-бирюзовый и песочный взяты у ночного Mirage и пыльной дымки, а золотой акцент
-     выделяет кнопки и заголовки, как маркер траектории броска. */
+  /* ===== Токены. Фон и шрифты сняты с макета v0, акцент золотой, как на основном сайте ===== */
   :root{
-    --c-night:#10252e;   /* фон тёмной темы */
-    --c-panel:#173540;   /* карточки */
-    --c-sand:#ecd9a8;    /* основной текст */
-    --c-gold:#f2b632;    /* акцент */
-    --c-teal:#2fb5a8;    /* вторичный акцент */
+    --bg:#0f2629;
+    --card:#163338;
+    --line:#2a4a50;
+    --text:#ecd9a8;
+    --muted:#a3b9bc;
+    --accent:#f2b632;
+    --accent-text:#f2b632;
+    --on-accent:#2b1e00;
+    --focus:#f2b632;
   
-    --bg:var(--c-night);
-    --panel:var(--c-panel);
-    --line:#2a5361;
-    --text:var(--c-sand);
-    --muted:#9db4b8;
-    --heading:var(--c-gold);
-    --btn:var(--c-gold);
-    --btn-ink:#2b1e00;
-    --focus:var(--c-gold);
+    --font-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-head:"Oswald",Impact,"Arial Narrow",sans-serif;
+  
+    --pad:16px;            /* боковой отступ: 16 px на телефоне */
+    --sec:56px;            /* вертикальный отступ секций: 56 px на телефоне */
+    --radius:12px;
+    --card-pad:24px;
   }
   :root[data-theme="light"]{
-    --bg:#f6efdc;
-    --panel:#fffaf0;
-    --line:#d8c9a0;
-    --text:#10252e;
+    --bg:#eef6f6;
+    --card:#ffffff;
+    --line:#c5d9d9;
+    --text:#0f2629;
     --muted:#4b6168;
-    --heading:#7a4f00;
-    --btn:#f2b632;
-    --btn-ink:#2b1e00;
+    --accent-text:#7a4f00;
     --focus:#7a4f00;
   }
   
   *{box-sizing:border-box}
-  [hidden]{display:none!important}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-  body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 "Golos Text",system-ui,sans-serif;
-    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-  h1,h2{font-family:"Russo One",Impact,sans-serif;font-weight:400;color:var(--heading);line-height:1.1;margin:0 0 14px}
-  h1{font-size:clamp(32px,7vw,58px)}
-  h2{font-size:clamp(24px,4.5vw,34px)}
-  h2 small{font:400 .55em "Golos Text",sans-serif;color:var(--muted);margin-left:6px}
-  p{margin:0 0 14px;max-width:62ch}
-  a{color:var(--heading)}
+  body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.65 var(--font-body);
+    padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+  img,iframe{max-width:100%}
+  a{color:inherit}
   :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
   
-  /* Ширину страницы задают сами шапка, основной блок и подвал, обёртка не нужна */
-  body>header,body>main,body>footer{max-width:1000px;margin:0 auto;padding-left:18px;padding-right:18px}
-  .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;padding-bottom:16px}
-  .brand{font:400 20px "Russo One",Impact,sans-serif;color:var(--heading)}
-  .btn{padding:10px 16px;border-radius:8px;border:2px solid var(--btn);background:var(--btn);color:var(--btn-ink);font:600 15px "Golos Text",sans-serif;cursor:pointer}
-  .btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
-  .btn[disabled]{opacity:.6;cursor:progress}
+  h1,h2,h3{font-family:var(--font-head);text-transform:uppercase;line-height:1.1;margin:0;text-wrap:balance}
+  h1{font-size:36px;font-weight:700}
+  h2{font-size:30px;font-weight:700}
+  h3{font-size:22px;font-weight:700}
+  p{margin:0;text-wrap:pretty}
+  ul,ol{margin:0;padding:0;list-style:none}
   
-  .hero{padding:16px 0 36px;border-top:0}
-  .hero p.lead{font-size:19px;color:var(--muted)}
-  .photo{margin:0}
-  .photo img{display:block;width:100%;height:auto;object-fit:cover;border-radius:12px;border:2px solid var(--line);background:var(--panel)}
-  .photo.wide img{aspect-ratio:16/7}
-  .photo figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
+  /* Контент ограничен 1152 px, а фон секций идёт во всю ширину */
+  body>header,main>section,body>footer{padding-inline:max(var(--pad),calc((100% - 1152px)/2))}
+  main>section{padding-block:var(--sec);scroll-margin-top:64px}
+  main>section.hero{padding-top:24px}
   
-  section{padding:30px 0;border-top:2px solid var(--line)}
+  .eyebrow{font:500 13px/1.2 var(--font-head);letter-spacing:.3em;text-transform:uppercase;color:var(--accent-text);margin:0 0 10px}
+  .head{margin-bottom:28px}
+  .muted{color:var(--muted)}
   
-  /* Раздел с роликом: на широком экране видео слева на всю высоту, заголовок и текст справа
-     друг под другом; на узком порядок такой: заголовок, видео, текст */
-  .split{display:grid;gap:0 26px;align-items:start;
-    grid-template-columns:minmax(0,320px) minmax(0,1fr);grid-template-rows:repeat(5,auto) 1fr}
-  .split>*{grid-column:2}
-  .split>.clip{grid-column:1;grid-row:1/-1}
-  @media (max-width:700px){
-    .split{grid-template-columns:minmax(0,1fr);grid-template-rows:none}
-    .split>*,.split>.clip{grid-column:1;grid-row:auto;order:2}
-    .split>h2{order:0}
-    .split>.clip{order:1}
-  }
-  .clip{margin:0 0 18px;max-width:320px}
-  .split>textarea,.split>label{max-width:62ch}
-  .clip iframe{display:block;width:100%;aspect-ratio:9/16;max-height:72vh;border:2px solid var(--line);border-radius:10px;background:#0a1a20}
+  .skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--on-accent);padding:8px 14px;border-radius:8px;z-index:100;font-weight:600}
+  .skip:focus{left:8px}
   
-  label.nl{display:block;margin-top:16px;font-weight:600}
-  input[type=text],input[type=email],textarea{display:block;width:100%;max-width:62ch;border:2px solid var(--line);background:var(--panel);color:var(--text);
-    border-radius:8px;padding:9px 12px;font:400 16px/1.5 "Golos Text",sans-serif}
-  textarea.note{min-height:6em;resize:vertical;border-left:4px solid var(--btn);border-radius:0 8px 8px 0}
+  /* ===== Шапка ===== */
+  body>header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;
+    min-height:56px;border-bottom:1px solid var(--line);
+    background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 18px/1 var(--font-head);text-transform:uppercase;letter-spacing:.04em}
+  .brand b{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:15px}
+  .brand span span{color:var(--accent-text)}
+  body>header nav{display:none}
+  body>header nav ul{display:flex;flex-wrap:wrap;justify-content:center;gap:0 24px;font-size:14px;color:var(--muted)}
+  body>header nav a{display:flex;align-items:center;min-height:44px;text-decoration:none;transition:color .15s}
+  body>header nav a:hover{color:var(--accent-text)}
+  .icon-btn{width:44px;height:44px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);cursor:pointer}
+  .icon-btn:hover{border-color:var(--accent);color:var(--accent-text)}
+  .icon-btn svg{width:20px;height:20px}
+  :root[data-theme="dark"] .i-moon,:root[data-theme="light"] .i-sun{display:none}
+  
+  /* ===== Главный экран ===== */
+  .hero p.lead{margin-top:16px;color:var(--muted);font-size:17px;max-width:42rem}
+  .hero figure{position:relative;margin:28px 0 0;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line)}
+  .hero img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:var(--card)}
+  .hero figcaption{position:absolute;left:12px;bottom:12px;right:12px;width:fit-content;max-width:calc(100% - 24px);
+    padding:6px 12px;border-radius:8px;font-size:13px;color:var(--text);
+    background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  
+  /* ===== Карточки ===== */
+  .cards{--gap:16px;--cols:1;display:flex;flex-direction:column;gap:var(--gap)}
+  .cards>li{min-width:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:var(--card-pad)}
+  .why .card{display:flex;flex-direction:column;gap:12px}
+  .why .card svg{width:28px;height:28px;color:var(--accent-text)}
+  .why .card p,.mistakes .card p{color:var(--muted)}
+  
+  /* ===== Раскидки ===== */
+  .lineups .cards{--gap:20px}
+  .card.lineup{display:flex;flex-direction:column;gap:20px;padding:0;overflow:hidden}
+  .lineup>iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#0a1a20}
+  .lineup .body{padding:0 var(--card-pad) var(--card-pad);display:flex;flex-direction:column;gap:18px}
+  .lineup h3 small{font:500 .55em var(--font-body);text-transform:none;letter-spacing:0;color:var(--muted);margin-left:6px}
+  dl{display:grid;gap:4px 16px;margin:0;font-size:15px}
+  dt{font:500 14px/1.6 var(--font-head);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-text);margin-top:8px}
+  dd{margin:0;color:var(--muted)}
+  .field label{display:block;font-weight:600;font-size:15px;margin-bottom:6px}
+  .field input,.field textarea{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:8px;
+    padding:12px;font:400 16px/1.5 var(--font-body)}   /* 16 px: iOS не приближает поле при фокусе */
+  .field textarea{min-height:96px;resize:vertical}
   ::placeholder{color:var(--muted)}
+  .field input:focus-visible,.field textarea:focus-visible{outline-offset:1px;border-color:var(--accent)}
   
-  ul.err{padding-left:20px;max-width:62ch}
-  ul.err li{margin-bottom:8px}
+  /* ===== Тайминг ===== */
+  .steps{background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
+  .steps li{display:flex;flex-direction:column;gap:6px;padding:20px var(--card-pad)}
+  .steps li+li{border-top:1px solid var(--line)}
+  .steps strong{font:500 18px/1.2 var(--font-head);text-transform:uppercase;letter-spacing:.03em;color:var(--accent-text)}
+  .steps p{color:var(--muted)}
   
-  form.card{background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:6px 18px 18px;max-width:460px}
-  form.card input{background:var(--bg)}
-  form.card .btn{margin-top:16px}
-  #cStatus{margin:12px 0 0;min-height:1.6em;color:var(--muted);font-size:15px}
+  /* ===== Ошибки ===== */
+  .mistakes .card{display:flex;gap:16px}
+  .mistakes .num{font:700 40px/1 var(--font-head);color:var(--accent-text)}
+  .mistakes .card>article{min-width:0}   /* flex-элемент по умолчанию не сжимается меньше своего содержимого */
+  .mistakes h3{margin-bottom:8px;font-size:20px;overflow-wrap:break-word}
   
-  footer{border-top:2px solid var(--line);padding:22px 0 90px;color:var(--muted);font-size:14px}
+  /* ===== Форма ===== */
+  .signup form{display:flex;flex-direction:column;gap:16px}
+  .signup header p{margin-top:12px}
+  .signup .box{display:flex;flex-direction:column;gap:24px;border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+  .btn{display:inline-flex;justify-content:center;align-items:center;min-height:48px;padding:12px 20px;border-radius:8px;border:0;
+    background:var(--accent);color:var(--on-accent);font:700 17px/1 var(--font-head);text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:opacity .15s}
+  .btn:hover{opacity:.9}
+  .btn[disabled]{opacity:.6;cursor:progress}
+  #formMsg{min-height:1.6em;font-size:15px;color:var(--muted)}
   
-  #up{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));
-    width:48px;height:48px;border-radius:50%;border:2px solid var(--btn);background:var(--btn);color:var(--btn-ink);
-    font:600 22px/1 "Golos Text",sans-serif;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s}
-  #up.show{opacity:1;pointer-events:auto}
+  /* ===== Галерея смоков: Grid с auto-fit ===== */
+  .gallery-grid{
+    display:grid;
+    /* auto-fit: сколько колонок по 240 px+ влезает, столько и будет; свободное место делят карточки.
+       min(100%,240px) не даёт сетке вылезти за экран на узком телефоне */
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));
+    gap:16px;
+  }
+  .g-item{min-width:0;display:flex}
+  .g-card{
+    display:flex;flex-direction:column;width:100%;padding:0;overflow:hidden;text-align:left;cursor:pointer;
+    background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+    font:inherit;transition:transform .2s,border-color .2s,box-shadow .2s;
+  }
+  .g-card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 10px 24px rgb(0 0 0/.25)}
+  .g-art{
+    position:relative;display:grid;place-items:center;aspect-ratio:16/9;overflow:hidden;
+    background:
+      radial-gradient(circle at 30% 60%,color-mix(in srgb,var(--accent) 38%,transparent),transparent 55%),
+      radial-gradient(circle at 75% 35%,color-mix(in srgb,var(--text) 22%,transparent),transparent 50%),
+      var(--bg);
+    border-bottom:1px solid var(--line);
+  }
+  .g-art b{font:700 34px/1 var(--font-head);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-text)}
+  .g-art i{position:absolute;top:10px;left:12px;font:500 13px/1 var(--font-head);letter-spacing:.2em;color:var(--muted);font-style:normal}
+  .g-body{display:flex;flex-direction:column;gap:8px;padding:16px var(--card-pad) var(--card-pad)}
+  .g-body h3{font-size:20px}
+  .g-body p{color:var(--muted);font-size:15px}
+  .g-more{margin-top:4px;font:500 14px/1 var(--font-head);text-transform:uppercase;letter-spacing:.08em;color:var(--accent-text)}
+  
+  /* Анимация появления: карточки всплывают снизу по очереди (задержка = --i × 70 мс).
+     Состояние «скрыто» включает только JS (класс armed), поэтому без скриптов карточки видны сразу. */
+  @keyframes rise{
+    from{opacity:0;transform:translateY(28px) scale(.96)}
+    to{opacity:1;transform:none}
+  }
+  .gallery.armed .g-item{opacity:0}
+  .gallery.armed .g-item.in{animation:rise .6s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i) * 70ms)}
+  @media (prefers-reduced-motion:reduce){
+    .gallery.armed .g-item.in{animation:none;opacity:1}
+    .g-card:hover{transform:none}
+  }
+  
+  /* ===== Модальное окно ===== */
+  dialog.modal{
+    width:min(560px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:var(--card-pad);
+    background:var(--card);color:var(--text);border:1px solid var(--accent);border-radius:var(--radius);
+  }
+  dialog.modal::backdrop{background:rgb(5 15 17/.72);backdrop-filter:blur(3px)}
+  dialog.modal[open]{animation:rise .3s ease both}
+  .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px}
+  .modal-head small{display:block;margin-top:6px;font:500 13px/1 var(--font-head);letter-spacing:.2em;color:var(--accent-text)}
+  .modal dl{margin-bottom:20px}
+  .modal .btn{width:100%}
+  
+  body>footer{border-top:1px solid var(--line);padding-block:24px;color:var(--muted);font-size:14px}
+  body>footer a{color:var(--accent-text)}
+  
+  /* ===== Планшет и выше (≥768 px): всё, что меняется на широком экране ===== */
+  @media (min-width:768px){
+    :root{--pad:24px;--sec:80px;}
+    h1{font-size:60px}
+    h2{font-size:40px}
+    body>header nav{display:flex;flex:1;justify-content:center}
+    main>section.hero{padding-top:48px}
+    .hero p.lead{font-size:19px}
+    .hero img{aspect-ratio:21/9}
+    .hero figcaption{left:16px;bottom:16px;font-size:14px}
+    .cards{flex-direction:row;flex-wrap:wrap}
+    .cards>li{flex:1 1 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols))}
+    .why .cards,.mistakes .cards{--cols:3}
+    .lineups .cards{--cols:2}
+    .steps li{flex-direction:row;align-items:baseline;gap:32px}
+    .steps strong{flex:0 0 16rem}
+    .signup .box{flex-direction:row;padding:40px;gap:40px}
+    .signup .box>*{flex:1 1 0;min-width:0}
+  }
+  /* на планшете колонки узкие: номер ставим над текстом, чтобы слова не рвались */
+  @media (min-width:768px) and (max-width:1023px){
+    .mistakes .card{flex-direction:column;gap:8px}
+  }
+  @media (min-width:480px){
+    dl{grid-template-columns:5.5rem 1fr;gap:10px 16px}
+    dt{margin-top:0}
+  }
   </style>
   </head>
   <body>
-    <header class="top">
-      <span class="brand">Mirage за Т</span>
-      <!-- ИНТЕРАКТИВ 1: переключатель темы (запоминает выбор в браузере) -->
-      <button class="btn ghost" id="theme" type="button">Тёмная тема</button>
-    </header>
+  <a class="skip" href="#main">К содержимому</a>
   
-    <main>
-      <section class="hero">
-        <!-- ЗАГОЛОВОК 1: назван результат («два смока») и объекты («окно, коннектор»),
-             чтобы тема была понятна с первой секунды. -->
-        <h1>Два смока на Mirage за Т: окно и коннектор</h1>
-        <p class="lead">Короткий разбор двух бросков, которые закрывают самые опасные линии обзора на миде: что они делают, когда их кидать и где чаще всего ошибаются.</p>
-        <figure class="photo wide">
-          <img src="https://images.unsplash.com/photo-1723792306904-c417c0da40e3?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=NHwxMjA3fDA%3D" width="1400" height="612" alt="Игровое рабочее место с розово-фиолетовой подсветкой: изогнутый монитор с наушниками, системный блок со стеклянной стенкой и игровое кресло" fetchpriority="high">
-          <figcaption>Удобное место и порядок на столе помогают тренировать броски без спешки.</figcaption>
-        </figure>
-      </section>
+  <header>
+    <a class="brand" href="#top" aria-label="Mirage Smokes, на главную"><b aria-hidden="true">M</b><span>Mirage <span>Smokes</span></span></a>
+    <nav aria-label="Разделы">
+      <ul>
+        <li><a href="#why">Зачем</a></li>
+        <li><a href="#lineups">Раскидки</a></li>
+        <li><a href="#gallery">Галерея</a></li>
+        <li><a href="#timing">Когда</a></li>
+        <li><a href="#mistakes">Ошибки</a></li>
+      </ul>
+    </nav>
+    <button class="icon-btn" id="theme" type="button" aria-label="Переключить тему">
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path></svg>
+    </button>
+  </header>
   
-      <section id="why">
-        <!-- ЗАГОЛОВОК 2: вопрос «зачем», потому что читатель сначала хочет понять пользу. -->
-        <h2>Зачем выучить именно эти два смока</h2>
-        <p>Мид на Mirage решает многие раунды. Пока защитник сидит в окне со снайперкой, а другие стреляют по миду через коннектор, выйти вперёд почти невозможно.</p>
-        <p>Два смока убирают эти две линии. Команда получает несколько спокойных секунд, чтобы занять мид и сыграть дальше без лишних потерь.</p>
-      </section>
+  <main id="main">
+    <section class="hero" id="top">
+      <p class="eyebrow">Гайд · CS2 · de_mirage</p>
+      <h1>Два смока, которые открывают мид</h1>
+      <p class="lead">Окно и коннектор — базовые раскидки за террористов. Выучите их один раз, и каждый выход на мид станет безопаснее для всей команды.</p>
+      <figure>
+        <img src="images/hero.webp" width="1170" height="780" alt="Игровое рабочее место с розово-фиолетовой подсветкой: изогнутый монитор с наушниками, системный блок со стеклянной стенкой и игровое кресло" fetchpriority="high">
+        <figcaption>Запоминайте ориентиры, а не пиксели</figcaption>
+      </figure>
+    </section>
   
-      <section id="window" class="split">
-        <!-- ЗАГОЛОВОК 3: название совпадает с клипом, чтобы клип и текст читались вместе. -->
-        <h2>Смок на окно <small>Window</small></h2>
-        <figure class="clip">
+    <section class="why" id="why" aria-labelledby="why-t">
+      <header class="head">
+        <p class="eyebrow">Зачем выучить</p>
+        <h2 id="why-t">Без этих смоков мид принадлежит CT</h2>
+      </header>
+      <ul class="cards cards-3">
+        <li class="card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+          <h3>Безопасный проход</h3>
+          <p>Смок в окно лишает защитника снайперской позиции на миде: можно спокойно взять контроль.</p>
+        </li>
+        <li class="card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.1a4 4 0 0 1 0 7.8"></path><path d="M22 21v-2a4 4 0 0 0-3-3.9"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          <h3>Закрытая ротация</h3>
+          <p>Коннектор убирает обзор сбоку: ротацию слышно, но не видно, и команда спокойно играет мид.</p>
+        </li>
+        <li class="card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"></path></svg>
+          <h3>Одна позиция — один бросок</h3>
+          <p>Раскидка стабильна: встал в ту же точку, навёл на тот же ориентир — получил тот же результат.</p>
+        </li>
+      </ul>
+    </section>
+  
+    <section class="lineups" id="lineups" aria-labelledby="lineups-t">
+      <header class="head">
+        <p class="eyebrow">Раскидки</p>
+        <h2 id="lineups-t">Окно и коннектор</h2>
+      </header>
+      <ul class="cards">
+        <li class="card lineup">
           <iframe src="https://www.youtube.com/embed/YEmLbvr-_U4" title="Видео: бросок смока на окно (Window) на Mirage" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        </figure>
-          <p>Окно даёт защитнику обзор почти на весь мид. Дым в нём закрывает снайперу картинку и не даёт получить выстрел в первые секунды выхода.</p>
-          <p>Бросок показан в клипе. Повторяй его на тренировочной карте, пока он не будет получаться с первой попытки.</p>
-          <label class="nl" for="n-window">Мои заметки по броску</label>
-          <textarea class="note" id="n-window" data-f="window" placeholder="Где встать, куда целиться, как бросать"></textarea>
-      </section>
-  
-      <section id="connector" class="split">
-        <!-- ЗАГОЛОВОК 4: то же правило, что у предыдущего: имя броска = имя клипа. -->
-        <h2>Смок на коннектор <small>Connector</small></h2>
-        <figure class="clip">
+          <article class="body">
+            <h3>Смок на окно <small>Window</small></h3>
+            <p class="muted">Окно даёт защитнику обзор почти на весь мид. Дым закрывает снайперу картинку в первые секунды выхода.</p>
+            <dl>
+              <dt>Позиция</dt><dd>Встань в ту же точку, что в видео</dd>
+              <dt>Прицел</dt><dd>Запомни ориентир из клипа</dd>
+              <dt>Бросок</dt><dd>Повтори тип броска из клипа</dd>
+            </dl>
+            <p class="field">
+              <label for="n-window">Мои заметки</label>
+              <textarea id="n-window" data-f="window" rows="3" placeholder="Где встать, куда целиться, как бросать"></textarea>
+            </p>
+          </article>
+        </li>
+        <li class="card lineup">
           <iframe src="https://www.youtube.com/embed/fC0I6F80izs" title="Видео: бросок смока на коннектор (Connector) на Mirage" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        </figure>
-          <p>Коннектор связывает мид с позициями защиты у точки A. Через него защитники подтягиваются в мид и стреляют по вашей команде сбоку.</p>
-          <p>Если смок лёг точно, проход закрыт: ротация слышна, но не видна, и команда спокойно играет мид.</p>
-          <label class="nl" for="n-connector">Мои заметки по броску</label>
-          <textarea class="note" id="n-connector" data-f="connector" placeholder="Где встать, куда целиться, как бросать"></textarea>
-      </section>
+          <article class="body">
+            <h3>Смок на коннектор <small>Connector</small></h3>
+            <p class="muted">Коннектор связывает мид с позициями защиты у точки A. Дым закрывает проход, через который подтягиваются защитники.</p>
+            <dl>
+              <dt>Позиция</dt><dd>Встань в ту же точку, что в видео</dd>
+              <dt>Прицел</dt><dd>Запомни ориентир из клипа</dd>
+              <dt>Бросок</dt><dd>Повтори тип броска из клипа</dd>
+            </dl>
+            <p class="field">
+              <label for="n-connector">Мои заметки</label>
+              <textarea id="n-connector" data-f="connector" rows="3" placeholder="Где встать, куда целиться, как бросать"></textarea>
+            </p>
+          </article>
+        </li>
+      </ul>
+    </section>
   
-      <section id="when">
-        <!-- ЗАГОЛОВОК 5: «когда» отвечает на главный практический вопрос после «что» и «как». -->
-        <h2>Когда бросать</h2>
-        <p>Смоки кидают в начале раунда, ещё до выхода в мид: если опоздать, защитники уже займут позиции и дым закроет только то, что они и так видели.</p>
-        <p>Договорись заранее, кто бросает окно, а кто коннектор, и скажи об этом в голосовом чате перед броском.</p>
-      </section>
+    <section class="gallery armed" id="gallery" aria-labelledby="gallery-t">
+      <header class="head">
+        <p class="eyebrow">Галерея</p>
+        <h2 id="gallery-t">Восемь смоков, которые стоит знать</h2>
+        <p class="muted" style="margin-top:12px">Нажмите на карточку: что смок закрывает и когда его бросать. Точные точки и прицелы смотрите в видео выше и в игре.</p>
+      </header>
+      <ul class="gallery-grid">
+        <li class="g-item in" style="--i:0"><button class="g-card" type="button" data-en="Window" data-name="Окно" data-closes="Обзор снайпера из окна на весь мид." data-when="Со спавна, до выхода команды на мид." data-tip="Вместе с коннектором даёт самый безопасный выход на мид."><span class="g-art"><i>01</i><b>Window</b></span><span class="g-body"><h3>Окно</h3><p>Закрывает снайперскую позицию на миде.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:1"><button class="g-card" type="button" data-en="Connector" data-name="Коннектор" data-closes="Проход, по которому защитники подтягиваются к миду от точки A." data-when="Перед выходом на мид, чтобы дым не рассеялся раньше времени." data-tip="Заранее скажите в голосовом чате, кто бросает."><span class="g-art"><i>02</i><b>Connector</b></span><span class="g-body"><h3>Коннектор</h3><p>Закрывает ротацию защитников через проход.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:2"><button class="g-card" type="button" data-en="Jungle" data-name="Джангл" data-closes="Обзор из джанглов на подходе к A-сайту." data-when="В начале атаки на A, перед заходом на сайт." data-tip="Бросайте вместе с другими смоками, чтобы закрыть все углы сразу."><span class="g-art"><i>03</i><b>Jungle</b></span><span class="g-body"><h3>Джангл</h3><p>Прячет угол из джанглов при атаке на A.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:3"><button class="g-card" type="button" data-en="Stairs" data-name="Стэрс" data-closes="Обзор с лестницы, которая смотрит на A-сайт." data-when="В момент захода на сайт A." data-tip="Дым живёт недолго: бросайте за пару секунд до входа."><span class="g-art"><i>04</i><b>Stairs</b></span><span class="g-body"><h3>Стэрс</h3><p>Убирает обзор с лестницы у A-сайта.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:4"><button class="g-card" type="button" data-en="CT" data-name="CT-спавн" data-closes="Выглядывание защитника со стороны CT-спавна на A-сайт." data-when="В начале исполнения A, до выхода игроков на сайт." data-tip="Не перекрывайте себе проход: дым должен закрывать угол, а не путь."><span class="g-art"><i>05</i><b>CT</b></span><span class="g-body"><h3>CT-спавн</h3><p>Закрывает угол со стороны спавна защитников.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:5"><button class="g-card" type="button" data-en="Palace" data-name="Палас" data-closes="Позицию в паласе, которая простреливает вход на A-сайт." data-when="Перед заходом на A по рампе." data-tip="Покажите смок команде в тренировке, чтобы все знали, где он ляжет."><span class="g-art"><i>06</i><b>Palace</b></span><span class="g-body"><h3>Палас</h3><p>Прячет защитника в паласе при входе на A.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:6"><button class="g-card" type="button" data-en="Short" data-name="Короткий проход" data-closes="Обзор вдоль короткого прохода к A-сайту." data-when="Когда команда готова заходить коротким проходом." data-tip="Тренируйте бросок на карте с ботами, пока рука не запомнит его."><span class="g-art"><i>07</i><b>Short</b></span><span class="g-body"><h3>Короткий проход</h3><p>Перекрывает линию вдоль короткого прохода.</p><span class="g-more">Подробнее →</span></span></button></li>
+        <li class="g-item in" style="--i:7"><button class="g-card" type="button" data-en="Market" data-name="Маркет" data-closes="Окно маркета, из которого видно часть B-сайта и подходы." data-when="Перед заходом на B через аппартаменты или маркет." data-tip="Смок работает, только если бросок повторён из той же точки."><span class="g-art"><i>08</i><b>Market</b></span><span class="g-body"><h3>Маркет</h3><p>Закрывает окно маркета при атаке на B.</p><span class="g-more">Подробнее →</span></span></button></li>
+      </ul>
+    </section>
   
-      <section id="errors">
-        <!-- ЗАГОЛОВОК 6: прямое название проблемы, чтобы читатель сразу нашёл свою ошибку. -->
-        <h2>Три частые ошибки</h2>
-        <ul class="err">
-          <li><b>Другая точка броска.</b> Сдвиг даже на полшага меняет место, куда падает граната.</li>
-          <li><b>Слишком ранний смок.</b> Дым рассеивается раньше, чем команда выходит вперёд.</li>
-          <li><b>Нет договорённости.</b> Двое бросают один смок, а второй проход остаётся открытым.</li>
-        </ul>
-      </section>
+    <dialog class="modal" id="gdlg" aria-labelledby="gdlg-t">
+      <div class="modal-head">
+        <div><h2 id="gdlg-t" style="font-size:32px">Окно</h2><small id="gdlg-en">Window</small></div>
+        <button class="icon-btn" id="gdlg-x" type="button" aria-label="Закрыть">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+      <dl>
+        <dt>Закрывает</dt><dd id="gdlg-closes">Обзор снайпера из окна на весь мид.</dd>
+        <dt>Когда</dt><dd id="gdlg-when">Со спавна, до выхода команды на мид.</dd>
+        <dt>Совет</dt><dd id="gdlg-tip">Вместе с коннектором даёт самый безопасный выход на мид.</dd>
+      </dl>
+      <button class="btn" id="gdlg-ok" type="button">Понятно</button>
+    </dialog>
   
-      <section id="train">
-        <!-- ЗАГОЛОВОК 7: «как тренироваться» — это инструкция, поэтому текст написан в повелительном наклонении. -->
-        <h2>Как тренироваться</h2>
-        <p>Включи тренировочный режим или карту с ботами и повторяй каждый бросок подряд по десять раз. Считай только те, что легли точно. Когда получается восемь из десяти, переходи к игре с командой.</p>
-      </section>
+    <section class="timing" id="timing" aria-labelledby="timing-t">
+      <header class="head">
+        <p class="eyebrow">Когда бросать</p>
+        <h2 id="timing-t">Тайминг важнее точности</h2>
+      </header>
+      <ol class="steps">
+        <li><strong>Сразу со спавна</strong><p>Смоки кидают в начале раунда, ещё до выхода в мид: если опоздать, защитники уже займут позиции.</p></li>
+        <li><strong>Перед выходом на мид</strong><p>Бросайте, когда команда готова заходить, чтобы дым не рассеялся раньше времени.</p></li>
+        <li><strong>Договорённость</strong><p>Скажите в голосовом чате, кто бросает окно, а кто коннектор, до броска.</p></li>
+      </ol>
+    </section>
   
-      <section id="contact">
-        <!-- ЗАГОЛОВОК 8: вопрос к читателю, после которого логично идёт форма. -->
-        <h2>Остались вопросы?</h2>
-        <p>Оставь имя и почту, и мы ответим по броскам на окно и коннектор.</p>
-        <!-- ИНТЕРАКТИВ 3: форма обратной связи (имя, email, кнопка «Отправить») -->
-        <form class="card" id="contactForm">
-          <label class="nl" for="c-name">Имя</label>
-          <input type="text" id="c-name" name="name" maxlength="60" required="" autocomplete="name">
-          <label class="nl" for="c-email">Email</label>
-          <input type="email" id="c-email" name="email" maxlength="120" required="" autocomplete="email" placeholder="name@example.com">
-          <button class="btn" type="submit" id="cBtn">Отправить</button>
-          <p id="cStatus" role="status" aria-live="polite"></p>
+    <section class="mistakes" id="mistakes" aria-labelledby="mistakes-t">
+      <header class="head">
+        <p class="eyebrow">Частые ошибки</p>
+        <h2 id="mistakes-t">Три причины, почему смок не работает</h2>
+      </header>
+      <ol class="cards">
+        <li class="card"><span class="num" aria-hidden="true">1</span>
+          <article><h3>Другая точка броска</h3><p>Сдвиг даже на полшага меняет место, куда падает граната.</p></article></li>
+        <li class="card"><span class="num" aria-hidden="true">2</span>
+          <article><h3>Слишком ранний смок</h3><p>Дым рассеивается раньше, чем команда выходит вперёд.</p></article></li>
+        <li class="card"><span class="num" aria-hidden="true">3</span>
+          <article><h3>Нет договорённости</h3><p>Двое бросают один смок, а второй проход остаётся открытым.</p></article></li>
+      </ol>
+    </section>
+  
+    <section class="signup" id="signup" aria-labelledby="signup-t">
+      <section class="card box" aria-labelledby="signup-t">
+        <header>
+          <p class="eyebrow">Следующий гайд</p>
+          <h2 id="signup-t">Получите новые раскидки</h2>
+          <p class="muted">Оставьте имя и email — сообщим, когда выйдет следующий разбор.</p>
+        </header>
+        <form id="signupForm" novalidate="">
+          <p class="field"><label for="f-name">Имя</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required="" maxlength="60"></p>
+          <p class="field"><label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required="" maxlength="120" placeholder="you@example.com"></p>
+          <button class="btn" id="formBtn" type="submit">Подписаться</button>
+          <p id="formMsg" role="status" aria-live="polite"></p>
         </form>
       </section>
-    </main>
+    </section>
+  </main>
   
-    <footer>
-      Фото: Unsplash. Видео с бросками:
-      <a href="https://www.youtube.com/shorts/YEmLbvr-_U4" rel="noopener">смок на окно</a>,
-      <a href="https://www.youtube.com/shorts/fC0I6F80izs" rel="noopener">смок на коннектор</a> (YouTube; каналы Carletti и fraz0tv).
-    </footer>
-  
-  <!-- ИНТЕРАКТИВ 2: кнопка «Наверх» (появляется после прокрутки) -->
-  <button id="up" type="button" aria-label="Наверх" class="show">↑</button>
+  <footer>
+    <p>Фанатский гайд. Counter-Strike — торговая марка Valve. Видео:
+      <a href="https://www.youtube.com/shorts/YEmLbvr-_U4" rel="noopener">окно</a>,
+      <a href="https://www.youtube.com/shorts/fC0I6F80izs" rel="noopener">коннектор</a> (YouTube).</p>
+  </footer>
   
   <script>
   (function(){
     var root=document.documentElement;
   
-    /* Тема */
-    var tbtn=document.getElementById("theme");
-    function label(){tbtn.textContent=root.getAttribute("data-theme")==="light"?"Тёмная тема":"Светлая тема"}
-    label();
-    tbtn.addEventListener("click",function(){
+    document.getElementById("theme").addEventListener("click",function(){
       var next=root.getAttribute("data-theme")==="light"?"dark":"light";
       root.setAttribute("data-theme",next);
-      label();
-      try{localStorage.setItem("mir3:theme",next)}catch(e){}
+      try{localStorage.setItem("mirage:theme",next)}catch(e){}
     });
   
-    /* Наверх */
-    var up=document.getElementById("up");
-    function onScroll(){up.classList.toggle("show",window.scrollY>400)}
-    window.addEventListener("scroll",onScroll,{passive:true});onScroll();
-    up.addEventListener("click",function(){window.scrollTo({top:0})});
+    /* Галерея: появление карточек при прокрутке */
+    var gallery=document.getElementById("gallery");
+    var items=gallery.querySelectorAll(".g-item");
+    if("IntersectionObserver" in window){
+      gallery.classList.add("armed");
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target)}
+        });
+      },{threshold:0.15});
+      items.forEach(function(el){io.observe(el)});
+    }
+  
+    /* Модальное окно: один общий <dialog>, содержимое берётся из data-атрибутов нажатой карточки */
+    var dlg=document.getElementById("gdlg");
+    gallery.addEventListener("click",function(e){
+      var card=e.target.closest(".g-card");
+      if(!card)return;
+      document.getElementById("gdlg-t").textContent=card.dataset.name;
+      document.getElementById("gdlg-en").textContent=card.dataset.en;
+      document.getElementById("gdlg-closes").textContent=card.dataset.closes;
+      document.getElementById("gdlg-when").textContent=card.dataset.when;
+      document.getElementById("gdlg-tip").textContent=card.dataset.tip;
+      dlg.showModal();
+      root.style.overflow="hidden";
+    });
+    document.getElementById("gdlg-x").addEventListener("click",function(){dlg.close()});
+    document.getElementById("gdlg-ok").addEventListener("click",function(){dlg.close()});
+    dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.close()}); /* клик по затемнению */
+    dlg.addEventListener("close",function(){root.style.overflow=""});
   
     /* Заметки сохраняются в браузере */
     document.querySelectorAll("textarea[data-f]").forEach(function(el){
-      var k="mir3:"+el.dataset.f;
+      var k="mirage:"+el.dataset.f;
       try{el.value=localStorage.getItem(k)||""}catch(e){}
       el.addEventListener("input",function(){try{localStorage.setItem(k,el.value)}catch(e){}});
     });
   
-    /* Форма обратной связи */
-    var ENDPOINT=""; /* вставьте адрес приёма заявок, например https://formspree.io/f/xxxxxxx */
-    var cf=document.getElementById("contactForm"),cs=document.getElementById("cStatus"),cb=document.getElementById("cBtn");
-    cf.addEventListener("submit",function(e){
+    /* Форма. Пока ENDPOINT пустой, данные никуда не уходят (демо-режим) */
+    var ENDPOINT=""; /* например https://formspree.io/f/xxxxxxx */
+    var form=document.getElementById("signupForm"),msg=document.getElementById("formMsg"),btn=document.getElementById("formBtn");
+    form.addEventListener("submit",function(e){
       e.preventDefault();
-      var name=document.getElementById("c-name").value.trim();
-      var email=document.getElementById("c-email").value.trim();
-      if(!name||!email){cs.textContent="Заполните имя и email.";return}
-      if(!ENDPOINT){
-        cs.textContent="Демо-режим: форма пока не подключена к серверу, данные не отправлены.";
-        return;
-      }
-      cb.disabled=true;cs.textContent="Отправляем…";
+      var name=form.name.value.trim(),email=form.email.value.trim();
+      if(!name||!/^\S+@\S+\.\S+$/.test(email)){msg.textContent="Введите имя и корректный email.";return}
+      if(!ENDPOINT){msg.textContent="Демо-режим: форма пока не подключена к серверу, данные не отправлены.";return}
+      btn.disabled=true;msg.textContent="Отправляем…";
       fetch(ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({name:name,email:email})})
-        .then(function(r){if(!r.ok)throw new Error("http");cs.textContent="Спасибо! Заявка отправлена.";cf.reset()})
-        .catch(function(){cs.textContent="Не удалось отправить. Попробуйте ещё раз позже."})
-        .then(function(){cb.disabled=false});
+        .then(function(r){if(!r.ok)throw new Error("http");msg.textContent="Спасибо! Вы подписаны.";form.reset()})
+        .catch(function(){msg.textContent="Не удалось отправить. Попробуйте позже."})
+        .then(function(){btn.disabled=false});
     });
   })();
   </script>
